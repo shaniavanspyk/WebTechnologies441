@@ -1,45 +1,101 @@
 <!DOCTYPE html>
 <html>
-  <head>
 
-     <title>My First Web Page</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 20px;
-    }
+<head>
+    <meta charset="utf-8">
+    <title>Michael Cassens Example 441 Site</title>
+    <meta name="author" content="Michael Cassens`">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Stylish&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./HW1/styles.css">
+</head>
 
-    h1 {
-      color: #3366cc;
-    }
+<body>
 
-    p {
-      color: #333333;
-    }
-  </style>
-  </head>
-  <body>
+    <div class="hero">
+        <div class="title">
+            <h1>Michael Cassens</h1>
+            <h2>MART 441 - Web Tech</h2>
+            <h2>Homework Site</h2>
+            <div class="nav">
+                <a href="#information">
+                    <div class="nav-item">Information</div>
+                </a>
+                <a href="#class-info">
+                    <div class="nav-item">Course Information</div>
+                </a>
+                <a href="">
+                    <div class="nav-item">Why Me?</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--end hero-->
 
-    <h1>Welcome to My Page</h1>
+    <!-- Container that will "reveal" the background image. -->
+    <!-- This is our parallax-like effect. -->
+    <div id="information">
+        <div class="description-container">
+            <div class="description">
 
-    <p>This is my first one-page website built with HTML.</p>
-<h2>About Me</h2>
+                <h1>Information About Michael</h1>
+                <p>Michael Cassens is a teacher, a computer scientist, creative technologist, gamer, game developer</p>
+                <p>and mobile application developer.  His current practice and research is based on how to become a</p>
+                <p>better instructor, how to use gaming practices and theories to deliver better course content as well
+                <p>as build better and more interesting games for the market place using different games engines and 
+                <p>mobile platforms.</p>  
+                <p>As the Director of UM ESports, Michael focuses creating a community of
+                    inclusive and diverse students who like to play games with one another in a safe and accepting environment.
+                </p>
 
-<p>I enjoy learning new technologies and creating digital projects.</p>
+            </div>
+        </div>
+    </div>
+    <!-- End Parallax-Like -->
 
-<h2>My Favorite Things</h2>
+    <!-- A fake menu, this will re-cover the background image. -->
+    <div class="menu" id="class-info">
+        <h1>Information about the Course</h1>
+        <div class="menu-group-container">
 
-<ul>
-  <li>Games</li>
-  <li>Music</li>
-  <li>Design</li>
-</ul>
+            <div class="menu-group">
 
-<p>
-  Visit my favorite website:
-  <a href="https://www.example.com">Click here</a>
-</p>
+                <div class="menu-head">Overview</div>
+                <div>
+                    <div class="menu-item">Building on the principles and techniques covered in Intro to Web Design ( MART 341 ), this project-based class focuses on media integration, interactivity, client-side development, and server-side development for the presentation and development of artistic websites.</div>
+                    <div class="menu-item">This online advanced web technologies course will explore the latest in web technologies. This will began with a refresher of HTML5 and CSS3. Next will be a thorough exploration of JavaScript (JS) for client-side site development and interaction. The final topic will touch on the power of JS and node.js for server-side development. A number of JavaScript libraries will be explored for how they can speed up the artistic process.</div>
+                </div>
+            </div>
 
-  </body>
+            <div class="menu-group">
+
+                <div class="menu-head">Objectives</div>
+                <div>
+                    <div class="menu-item">- Feel comfortable creating static sites with advanced HTML5 & CSS3 techniques.</div>
+                    <div class="menu-item">- Be capable of using JavaScript (JS) to create "interactive elements" and manipulate the DOM.</div>
+                    <div class="menu-item">- Be capable of incorporating external JS libraries, such as d3 or tone.js to create engaging sites.</div>
+                    <div class="menu-item">- Have a basic understanding of the role node.js plays in web development.</div>
+                    <div class="menu-item">- Be capable of creating a basic web-socket based web-app for multi-user interaction.</div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End Menu -->
+ 
+        <!-- A fake menu, this will re-cover the background image. -->
+       
+            
+                <div id="information">
+                    <div class="description-container">
+                        <div class="description">
+            
+                            <h1>Why me?</h1>
+                            <p>I have worked in the industry for over 20 years. I specialize in small to medium sized businesses</p>
+                            <p>I focus on my clients.  I am a fast learner and I make sure that their needs are always addressed to the best of my ability.</p>
+            
+                        </div>
+                    </div>
+                </div>
+        </div> <!-- End Menu -->
+</body>
 </html>

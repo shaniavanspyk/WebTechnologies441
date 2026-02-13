@@ -1,12 +1,22 @@
 let level = 1;
+let isTeal = false;
 
-// Change text and background color
-function changeScene(text, color) {
+// Change text and alternate colors
+function changeScene(text) {
+
     document.getElementById("story").innerText = text;
-    document.body.style.backgroundColor = color;
+
+    // alternate between teal and red
+    if (isTeal) {
+        document.body.style.backgroundColor = "red";
+        isTeal = false;
+    } else {
+        document.body.style.backgroundColor = "teal";
+        isTeal = true;
+    }
 }
 
-// Function that returns final result
+// Function that returns ending
 function finalBattle(move) {
     if (move === "attack") {
         return "You attack the final boss and win! You escape the game!";
@@ -22,18 +32,14 @@ function nextPart() {
 
     if (level === 1) {
 
+        document.getElementById("gameImage").style.display = "none";
+
         if (userChoice === "door") {
-            changeScene(
-                "You open the door and find a glowing sword. Pick it up or leave it?",
-                "darkblue"
-            );
+            changeScene("You open the door and find a glowing sword. Pick it up or leave it?");
             level = 2;
 
         } else if (userChoice === "stairs") {
-            changeScene(
-                "You walk up the stairs and meet a strange NPC. Talk or ignore?",
-                "purple"
-            );
+            changeScene("You walk up the stairs and meet a strange NPC. Talk or ignore?");
             level = 3;
 
         } else {
@@ -46,18 +52,12 @@ function nextPart() {
         switch(userChoice) {
 
             case "pick it up":
-                changeScene(
-                    "You now have the sword. A monster appears! Attack or run?",
-                    "red"
-                );
+                changeScene("You now have the sword. A monster appears! Attack or run?");
                 level = 4;
                 break;
 
             case "leave it":
-                changeScene(
-                    "You leave the sword. The room resets. Type restart.",
-                    "black"
-                );
+                changeScene("You leave the sword. The room resets. Type restart.");
                 level = 6;
                 break;
 
@@ -76,17 +76,11 @@ function nextPart() {
                 i++;
             }
 
-            changeScene(
-                "The NPC warns you about the final boss. Attack or hide?",
-                "darkgreen"
-            );
+            changeScene("The NPC warns you about the final boss. Attack or hide?");
             level = 5;
 
         } else if (userChoice === "ignore") {
-            changeScene(
-                "The NPC glitches and deletes you. Type restart.",
-                "black"
-            );
+            changeScene("The NPC glitches and deletes you. Type restart.");
             level = 6;
 
         } else {
@@ -98,11 +92,7 @@ function nextPart() {
 
         let result = finalBattle(userChoice);
 
-        changeScene(
-            result + " Type restart to play again.",
-            "black"
-        );
-
+        changeScene(result + " Type restart to play again.");
         level = 6;
     }
 
@@ -118,8 +108,12 @@ function nextPart() {
 
 function restartGame() {
     level = 1;
-    changeScene(
-        "You start your favorite video game, but the screen glitches. You are now inside the game. You see a door and a staircase. Do you choose door or stairs?",
-        "black"
-    );
+    isTeal = false;
+
+    document.getElementById("story").innerText =
+        "You start your favorite video game, but the screen glitches. You are now inside the game. You see a door and a staircase. Do you choose door or stairs?";
+
+    document.body.style.backgroundColor = "teal";
+
+    document.getElementById("gameImage").style.display = "block";
 }

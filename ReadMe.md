@@ -1,1 +1,3 @@
+This week I tried things a little different I used more ChatGPT to test it out. I still did use YouTube for some of the layout. I found it did well with explaining things once I asked more information about the code. I think together with YouTube and ChatGPT it is a powerful tool to help understand the code even more. When I did put the assignment into Chat it wasn't as in depth as the code I had but I think if I asked it to do more things it would get there. 
+
  <a href="index.html"class="read-more">Page</a>

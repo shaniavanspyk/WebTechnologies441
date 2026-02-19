@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: #613c22;
+    background-color: #f4cdafdd;
+}
+
+h1 {
+    margin-top: 120px;
+}
+
+#board {
+    width: 520px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(4, 120px);
+    gap: 10px;
+}
+
+.tile {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}
+

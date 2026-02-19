@@ -1,119 +1,121 @@
-let level = 1;
-let isTeal = false;
+// ==============================
+// 1. Create Arrays
+// ==============================
 
-// Change text and alternate colors
-function changeScene(text) {
+// Blank images (what user sees first)
+let blankImages = new Array(12).fill("images/img7.jpg");
 
-    document.getElementById("story").innerText = text;
+// Actual image pairs (6 images × 2 = 12 total)
+let actualImages = [
+    "images/img1.jpg",
+    "images/img1.jpg",
+    "images/img2.jpg",
+    "images/img2.jpg",
+    "images/img3.jpg",
+    "images/img3.jpg",
+    "images/img4.jpg",
+    "images/img4.jpg",
+    "images/img5.jpg",
+    "images/img5.jpg",
+    "images/img6.jpg",
+    "images/img6.jpg"
+];
 
-    // alternate between teal and red
-    if (isTeal) {
-        document.body.style.backgroundColor = "red";
-        isTeal = false;
+
+// ==============================
+// 2. Shuffle Function
+// ==============================
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+
+        let randomIndex = Math.floor(Math.random() * (i + 1));
+
+        let temp = array[i];
+        array[i] = array[randomIndex];
+        array[randomIndex] = temp;
+    }
+}
+
+// Shuffle actual images
+shuffle(actualImages);
+
+
+// ==============================
+// 3. Build the Board (FOR LOOP)
+// ==============================
+
+let board = document.getElementById("board");
+
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+
+for (let i = 0; i < blankImages.length; i++) {
+
+    let img = document.createElement("img");
+    img.src = blankImages[i];
+    img.classList.add("tile");
+    img.dataset.index = i;
+
+    img.addEventListener("click", function () {
+        if (lockBoard) return;
+        revealCard(img);
+    });
+
+    board.appendChild(img);
+}
+
+
+// ==============================
+// 4. Reveal Card
+// ==============================
+
+function revealCard(card) {
+
+    let index = card.dataset.index;
+
+    if (card === firstCard) return;
+
+    card.src = actualImages[index];
+
+    if (!firstCard) {
+        firstCard = card;
     } else {
-        document.body.style.backgroundColor = "teal";
-        isTeal = true;
+        secondCard = card;
+        lockBoard = true;
+        checkMatch();
     }
 }
 
-// Function that returns ending
-function finalBattle(move) {
-    if (move === "attack") {
-        return "You attack the final boss and win! You escape the game!";
+
+// ==============================
+// 5. Check Match
+// ==============================
+
+function checkMatch() {
+
+    let firstIndex = firstCard.dataset.index;
+    let secondIndex = secondCard.dataset.index;
+
+    if (actualImages[firstIndex] === actualImages[secondIndex]) {
+        resetTurn();
     } else {
-        return "You hesitate and the boss defeats you. You are stuck forever.";
+        setTimeout(function () {
+            firstCard.src = "images/img7.jpg";
+            secondCard.src = "images/img7.jpg";
+            resetTurn();
+        }, 1000);
     }
 }
 
-function nextPart() {
 
-    let userChoice = document.getElementById("choiceBox").value.toLowerCase();
-    document.getElementById("choiceBox").value = "";
+// ==============================
+// 6. Reset Turn
+// ==============================
 
-    if (level === 1) {
-
-        document.getElementById("gameImage").style.display = "none";
-
-        if (userChoice === "door") {
-            changeScene("You open the door and find a glowing sword. Pick it up or leave it?");
-            level = 2;
-
-        } else if (userChoice === "stairs") {
-            changeScene("You walk up the stairs and meet a strange NPC. Talk or ignore?");
-            level = 3;
-
-        } else {
-            alert("Please type door or stairs.");
-        }
-    }
-
-    else if (level === 2) {
-
-        switch(userChoice) {
-
-            case "pick it up":
-                changeScene("You now have the sword. A monster appears! Attack or run?");
-                level = 4;
-                break;
-
-            case "leave it":
-                changeScene("You leave the sword. The room resets. Type restart.");
-                level = 6;
-                break;
-
-            default:
-                alert("Type pick it up or leave it.");
-        }
-    }
-
-    else if (level === 3) {
-
-        if (userChoice === "talk") {
-
-            let i = 0;
-            while (i < 3) {
-                console.log("NPC is thinking...");
-                i++;
-            }
-
-            changeScene("The NPC warns you about the final boss. Attack or hide?");
-            level = 5;
-
-        } else if (userChoice === "ignore") {
-            changeScene("The NPC glitches and deletes you. Type restart.");
-            level = 6;
-
-        } else {
-            alert("Type talk or ignore.");
-        }
-    }
-
-    else if (level === 4 || level === 5) {
-
-        let result = finalBattle(userChoice);
-
-        changeScene(result + " Type restart to play again.");
-        level = 6;
-    }
-
-    else if (level === 6) {
-
-        if (userChoice === "restart") {
-            restartGame();
-        } else {
-            alert("Type restart to play again.");
-        }
-    }
-}
-
-function restartGame() {
-    level = 1;
-    isTeal = false;
-
-    document.getElementById("story").innerText =
-        "You start your favorite video game, but the screen glitches. You are now inside the game. You see a door and a staircase. Do you choose door or stairs?";
-
-    document.body.style.backgroundColor = "teal";
-
-    document.getElementById("gameImage").style.display = "block";
+function resetTurn() {
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
 }

@@ -1,0 +1,45 @@
+body {
+    font-family: Arial;
+    text-align: center;
+    background-color: #f4cdaf;
+    color: #613c22;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #613c22;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #8a5633;
+}
+
+#board {
+    width: 520px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(4, 120px);
+    gap: 10px;
+}
+
+.tile {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}

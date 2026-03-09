@@ -1,168 +1,85 @@
-function startGame() {
-
-    let firstName = document.getElementById("firstName").value.trim();
-    let lastName = document.getElementById("lastName").value.trim();
-    let age = document.getElementById("age").value.trim();
-
-    if (firstName === "" || lastName === "" || age === "") {
-        alert("Fill in all fields");
-        return;
-    }
-
-    if (isNaN(age)) {
-        alert("Age must be a number");
-        return;
-    }
-
-    let player = {
-        firstName: firstName,
-        lastName: lastName,
-        age: Number(age),
-        attempts: 0
-    };
-
-    localStorage.setItem("playerData", JSON.stringify(player));
-
-    window.location.href = "game.html";
+class JusticeSlide {
+constructor(title, image, description, author, year){
+this.title = title;
+this.image = image;
+this.description = description;
+this.author = author;
+this.year = year;
+}
 }
 
+// SLIDES
 
-// ===============================
-// PAGE 2 — MEMORY GAME
-// ===============================
+let slide1 = new JusticeSlide(
+"First Earth Day Demonstrations",
+"images/earth-day.jpg",
+"The first Earth Day took place on April 22, 1970 when millions of Americans gathered to demand a healthier environment. The demonstrations raised awareness about pollution and environmental protection. The movement helped lead to important environmental laws and protections.",
+"Keystone / Getty Images",
+"1970"
+);
 
-let playerData = JSON.parse(localStorage.getItem("playerData"));
-let attempts = 0;
-let matchedPairs = 0;
+let slide2 = new JusticeSlide(
+"Women's March on Washington",
+"images/womens-march.jpg",
+"The Women's March in January 2017 brought more than half a million people to Washington D.C. Protesters supported gender equality, civil rights, and social justice issues. Millions more joined similar marches around the world.",
+"Bettmann / Getty Images",
+"2017"
+);
 
-let board = document.getElementById("board");
-let attemptDisplay = document.getElementById("attemptDisplay");
+let slide3 = new JusticeSlide(
+"March on Washington for Jobs and Freedom",
+"images/the-march.jpg",
+"This historic march took place in 1963 and became one of the most important events in the Civil Rights Movement. Hundreds of thousands gathered peacefully to demand racial equality and economic justice. The march is remembered for Dr. Martin Luther King Jr.'s 'I Have a Dream' speech.",
+"U.S. Information Agency",
+"1963"
+);
 
-if (board) {
+let slide4 = new JusticeSlide(
+"March for Our Lives Protest",
+"images/march-for-our-lives.jpg",
+"The March for Our Lives protest took place on March 24, 2018 after the tragic school shooting in Parkland, Florida. Students organized the event to demand stronger laws to prevent gun violence. More than one million people participated nationwide in support of safer communities.",
+"Mobilus In Mobili",
+"2018"
+);
 
-    let blankImages = new Array(12).fill("images/img7.jpg");
+let slide5 = new JusticeSlide(
+"2020 Racial Justice Protests",
+"images/blm.jpg",
+"The 2020 racial justice protests began after the death of George Floyd in Minneapolis. Demonstrations spread across hundreds of cities around the world calling for justice and an end to police brutality. The movement highlighted the need for racial equality and systemic reform.",
+"Photojournalists",
+"2020"
+);
 
-    let actualImages = [
-        "images/img1.jpg","images/img1.jpg",
-        "images/img2.jpg","images/img2.jpg",
-        "images/img3.jpg","images/img3.jpg",
-        "images/img4.jpg","images/img4.jpg",
-        "images/img5.jpg","images/img5.jpg",
-        "images/img6.jpg","images/img6.jpg"
-    ];
+// ARRAY
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            let r = Math.floor(Math.random() * (i + 1));
-            [array[i], array[r]] = [array[r], array[i]];
-        }
-    }
+let slides = [slide1, slide2, slide3, slide4, slide5];
 
-    shuffle(actualImages);
+let currentIndex = 0;
 
-    let firstCard = null;
-    let secondCard = null;
-    let lockBoard = false;
+// FUNCTION
 
-    for (let i = 0; i < blankImages.length; i++) {
+function showSlide(){
 
-        let img = document.createElement("img");
-        img.src = blankImages[i];
-        img.classList.add("tile");
-        img.dataset.index = i;
+let slide = slides[currentIndex];
 
-        img.addEventListener("click", function () {
+document.getElementById("slideImage").src = slide.image;
+document.getElementById("slideTitle").textContent = slide.title;
+document.getElementById("slideDescription").textContent = slide.description;
+document.getElementById("slideAuthor").textContent = slide.author;
+document.getElementById("slideYear").textContent = slide.year;
 
-            if (lockBoard) return;
-            if (img === firstCard) return;
+currentIndex++;
 
-            revealCard(img);
-        });
-
-        board.appendChild(img);
-    }
-
-    function revealCard(card) {
-
-        let index = card.dataset.index;
-        card.src = actualImages[index];
-
-        if (!firstCard) {
-            firstCard = card;
-        } else {
-            secondCard = card;
-            lockBoard = true;
-            checkMatch();
-        }
-    }
-
-    function checkMatch() {
-
-        attempts++;
-        attemptDisplay.innerText = "Attempts: " + attempts;
-
-        playerData.attempts = attempts;
-        localStorage.setItem("playerData", JSON.stringify(playerData));
-
-        let firstIndex = firstCard.dataset.index;
-        let secondIndex = secondCard.dataset.index;
-
-        if (actualImages[firstIndex] === actualImages[secondIndex]) {
-
-            matchedPairs++;
-
-            if (matchedPairs === actualImages.length / 2) {
-
-                setTimeout(() => {
-                    window.location.href = "results.html";
-                }, 1000);
-            }
-
-            resetTurn();
-
-        } else {
-
-            setTimeout(() => {
-                firstCard.src = "images/img7.jpg";
-                secondCard.src = "images/img7.jpg";
-                resetTurn();
-            }, 1000);
-        }
-    }
-
-    function resetTurn() {
-        firstCard = null;
-        secondCard = null;
-        lockBoard = false;
-    }
+if(currentIndex >= slides.length){
+currentIndex = 0;
 }
 
-
-// ===============================
-// PAGE 3 — RESULTS PAGE
-// ===============================
-
-let resultsDiv = document.getElementById("results");
-
-if (resultsDiv) {
-
-    let playerData = JSON.parse(localStorage.getItem("playerData"));
-
-    if (playerData) {
-
-        resultsDiv.innerHTML = `
-            <h2>${playerData.firstName} ${playerData.lastName}</h2>
-            <p>Age: ${playerData.age}</p>
-            <p>Total Attempts: ${playerData.attempts}</p>
-        `;
-    }
 }
 
-function playAgain() {
-    window.location.href = "index.html";
-}
+// BUTTON
 
-function resetGame() {
-    localStorage.removeItem("playerData");
-    location.reload();
-}
+document.getElementById("nextBtn").addEventListener("click", showSlide);
+
+// LOAD FIRST SLIDE
+
+showSlide();

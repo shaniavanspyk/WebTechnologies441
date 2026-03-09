@@ -1,23 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Player Setup</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Social Justice - Protests</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>Enter Player Information</h1>
+<h1>Social Justice</h1>
+<h2>Protests Around the World</h2>
 
-<input type="text" id="firstName" placeholder="First Name">
-<br><br>
+<div class="viewer">
 
-<input type="text" id="lastName" placeholder="Last Name">
-<br><br>
+<img id="slideImage" src="" alt="Social Justice Image">
 
-<input type="number" id="age" placeholder="Age">
-<br><br>
+<h3 id="slideTitle"></h3>
 
-<button onclick="startGame()">Start Game</button>
+<p id="slideDescription"></p>
+
+<p class="info">
+Author: <span id="slideAuthor"></span> |
+Year: <span id="slideYear"></span>
+</p>
+
+<button id="nextBtn">View Next Slide</button>
+
+</div>
 
 <script src="script.js"></script>
 

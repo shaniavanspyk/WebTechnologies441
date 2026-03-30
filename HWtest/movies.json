@@ -1,0 +1,6 @@
+[
+  { "title": "Inception", "genre": "Sci-Fi", "rating": 8.8 },
+  { "title": "Titanic", "genre": "Romance", "rating": 7.9 },
+  { "title": "The Dark Knight", "genre": "Action", "rating": 9.0 },
+  { "title": "Frozen", "genre": "Animation", "rating": 7.4 }
+]

@@ -5,33 +5,25 @@
     <title>Movie Ratings</title>
     <link rel="stylesheet" href="style.css">
 
-    <!-- jQuery -->
+    <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
 <h1>Movie Ratings</h1>
 
-<p id="movieCount"></p>
-
-<input type="text" id="search" placeholder="Search movies...">
-
 <table id="movieTable">
     <thead>
         <tr>
             <th>Title</th>
             <th>Genre</th>
-            <th id="sortRating">Rating ⬍</th>
-            <th>Year</th>
-            <th>Director</th>
+            <th>Rating</th>
         </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+        <!-- Data loads here -->
+    </tbody>
 </table>
-
-<p id="noResults" style="display:none;">No movies found</p>
-
-<div id="movieDetails"></div>
 
 <script src="script.js"></script>
 

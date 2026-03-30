@@ -1,13 +1,13 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #6a8696;
+    background-color: #f4cdaf;
 }
 
 table {
     margin: 30px auto;
     border-collapse: collapse;
-    width: 75%;
+    width: 60%;
     background-color: white;
 }
 
@@ -25,32 +25,7 @@ tbody tr:hover {
     cursor: pointer;
 }
 
-/* zebra striping */
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* highlight */
+/* plugin styling */
 .highlight {
     background-color: #ffe6cc;
-}
-
-/* rating colors */
-.high {
-    color: green;
-    font-weight: bold;
-}
-
-.medium {
-    color: orange;
-}
-
-.low {
-    color: red;
-}
-
-/* details */
-#movieDetails {
-    margin-top: 20px;
-    padding: 15px;
 }

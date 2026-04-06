@@ -1,56 +1,11 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #6a8696;
+  text-align: center;
+  font-family: Arial;
 }
 
-table {
-    margin: 30px auto;
-    border-collapse: collapse;
-    width: 75%;
-    background-color: white;
-}
-
-th, td {
-    padding: 12px;
-    border: 1px solid #613c22;
-}
-
-th {
-    background-color: #613c22;
-    color: white;
-}
-
-tbody tr:hover {
-    cursor: pointer;
-}
-
-/* zebra striping */
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* highlight */
-.highlight {
-    background-color: #ffe6cc;
-}
-
-/* rating colors */
-.high {
-    color: green;
-    font-weight: bold;
-}
-
-.medium {
-    color: orange;
-}
-
-.low {
-    color: red;
-}
-
-/* details */
-#movieDetails {
-    margin-top: 20px;
-    padding: 15px;
+canvas {
+  border: 3px solid black;
+  display: block;
+  margin: 20px auto;
+  background: lightblue;
 }

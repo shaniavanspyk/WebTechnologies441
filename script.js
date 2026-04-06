@@ -1,122 +1,112 @@
-$(document).ready(function () {
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-    let movieData = [];
+class Square {
+  constructor(x, y, w, h, color) {
+    this.x = x;
+    this.y = y;
+    this.width = w;
+    this.height = h;
+    this.color = color;
+    this.speedX = 0;
+    this.speedY = 0;
+  }
 
-    // ==========================
-    // LOAD JSON
-    // ==========================
-    $.getJSON("movies.json")
-        .done(function (data) {
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
 
-            movieData = data;
+  move() {
+    this.x += this.speedX;
+    this.y += this.speedY;
 
-            renderTable(movieData);
+    // keep inside canvas
+    if (this.x < 0) this.x = 0;
+    if (this.y < 0) this.y = 0;
+    if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+    if (this.y + this.height > canvas.height) this.y = canvas.height - this.height;
+  }
+}
 
-            $("#movieCount").text("Total Movies: " + data.length);
-        })
-        .fail(function () {
-            console.error("Failed to load JSON.");
-        });
+// objects
+let player = new Square(100, 100, 50, 50, "blue");
+let enemy = new Square(300, 200, 50, 50, "red");
 
+enemy.speedX = 2;
+enemy.speedY = 2;
 
-    // ==========================
-    // RENDER TABLE
-    // ==========================
-    function renderTable(data) {
+let bgColor = "lightblue";
 
-        let rows = "";
+// keyboard input
+let keys = {};
+document.addEventListener("keydown", (e) => keys[e.key] = true);
+document.addEventListener("keyup", (e) => keys[e.key] = false);
 
-        $.each(data, function (index, movie) {
+function handleInput() {
+  player.speedX = 0;
+  player.speedY = 0;
 
-            let ratingClass = "";
+  if (keys["ArrowUp"]) player.speedY = -4;
+  if (keys["ArrowDown"]) player.speedY = 4;
+  if (keys["ArrowLeft"]) player.speedX = -4;
+  if (keys["ArrowRight"]) player.speedX = 4;
+}
 
-            if (movie.rating >= 8.5) {
-                ratingClass = "high";
-            } else if (movie.rating >= 7) {
-                ratingClass = "medium";
-            } else {
-                ratingClass = "low";
-            }
+function moveEnemy() {
+  enemy.move();
 
-            let badge = movie.rating >= 9 ? "⭐" : "";
+  // bounce
+  if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+    enemy.speedX *= -1;
+  }
+  if (enemy.y <= 0 || enemy.y + enemy.height >= canvas.height) {
+    enemy.speedY *= -1;
+  }
+}
 
-            rows += `
-                <tr class="movieRow" data-index="${index}">
-                    <td>${movie.title} ${badge}</td>
-                    <td>${movie.genre}</td>
-                    <td class="${ratingClass}">${movie.rating}</td>
-                    <td>${movie.year}</td>
-                    <td>${movie.director}</td>
-                </tr>
-            `;
-        });
+function hasCollided(a, b) {
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
+}
 
-        $("#movieTable tbody").html(rows);
+function handleCollision() {
+  if (hasCollided(player, enemy)) {
+    bgColor = bgColor === "lightblue" ? "yellow" : "lightblue";
 
-        $(".movieRow").hide().fadeIn(800);
+    player.width = 70;
+    player.height = 70;
+    enemy.width = 70;
+    enemy.height = 70;
 
-        $(".movieRow").clickHighlight();
-    }
+    setTimeout(() => {
+      player.width = 50;
+      player.height = 50;
+      enemy.width = 50;
+      enemy.height = 50;
+    }, 200);
+  }
+}
 
+function update() {
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // ==========================
-    // SEARCH
-    // ==========================
-    $("#search").on("keyup", function () {
-        let value = $(this).val().toLowerCase();
-        let visible = 0;
+  handleInput();
+  player.move();
+  moveEnemy();
+  handleCollision();
 
-        $(".movieRow").filter(function () {
-            let match = $(this).text().toLowerCase().includes(value);
-            $(this).toggle(match);
-            if (match) visible++;
-        });
+  player.draw();
+  enemy.draw();
+}
 
-        $("#noResults").toggle(visible === 0);
-    });
+setInterval(update, 1000/60);
 
-
-    // ==========================
-    // SORT
-    // ==========================
-    $("#sortRating").click(function () {
-        movieData.sort((a, b) => b.rating - a.rating);
-        renderTable(movieData);
-    });
-
-
-    // ==========================
-    // CUSTOM PLUGIN
-    // ==========================
-    $.fn.clickHighlight = function () {
-
-        return this.each(function () {
-
-            $(this).on("click", function () {
-
-                $(".movieRow").removeClass("highlight");
-                $(this).addClass("highlight");
-
-                let index = $(this).data("index");
-                let movie = movieData[index];
-
-                $("#movieDetails").html(`
-                    <h2>${movie.title}</h2>
-                    <p><strong>Genre:</strong> ${movie.genre}</p>
-                    <p><strong>Rating:</strong> ${movie.rating}</p>
-                    <p><strong>Year:</strong> ${movie.year}</p>
-                    <p><strong>Director:</strong> ${movie.director}</p>
-                    <p>${movie.description}</p>
-                `);
-
-                $("html, body").animate({
-                    scrollTop: $("#movieDetails").offset().top
-                }, 500);
-
-            });
-
-        });
-
-    };
-
-});
+function playMusic() {
+  document.getElementById("bgMusic").play();
+}

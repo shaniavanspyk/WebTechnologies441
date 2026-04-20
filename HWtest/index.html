@@ -1,31 +1,275 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Movie Ratings</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<title>Phaser Platformer Game</title>
 
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+
+<style>
+    body { margin: 0; }
+</style>
 </head>
+
 <body>
 
-<h1>Movie Ratings</h1>
+<script>
 
-<table id="movieTable">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Rating</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Data loads here -->
-    </tbody>
-</table>
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+    scene: { preload, create, update }
+};
 
-<script src="script.js"></script>
+var game = new Phaser.Game(config);
+
+var player, platforms, stars, bombs;
+var cursors, spaceBar;
+
+var score = 0;
+var scoreText;
+
+var startTime;
+var timerText;
+
+var bestTime = 0;
+var bestTimeText;
+
+var lives = 3;
+var livesText;
+
+var gameOver = false;
+var winShown = false;
+
+function preload () {
+    this.load.image('sky', 'assets/sky.png');
+    this.load.image('ground', 'assets/platform.png');
+    this.load.image('star', 'assets/star.png');
+    this.load.image('bomb', 'assets/bomb.png');
+
+    this.load.spritesheet('dude',
+        'assets/dude.png',
+        { frameWidth: 32, frameHeight: 48 }
+    );
+}
+
+function create () {
+
+    this.add.image(400, 300, 'sky');
+
+    score = 0;
+    lives = 3;
+    gameOver = false;
+    winShown = false;
+
+    // LOAD BEST TIME
+    bestTime = localStorage.getItem('bestTime') || 0;
+
+    scoreText = this.add.text(16, 16, 'Score: 0', {
+        fontSize: '24px',
+        fill: '#fff'
+    });
+
+    livesText = this.add.text(16, 50, 'Lives: ❤️❤️❤️', {
+        fontSize: '24px',
+        fill: '#fff'
+    });
+
+    startTime = this.time.now;
+
+    timerText = this.add.text(16, 85, 'Time: 0', {
+        fontSize: '24px',
+        fill: '#fff'
+    });
+
+    // ⭐ TOP RIGHT BEST TIME
+    bestTimeText = this.add.text(520, 16, 'Best Time: ' + bestTime, {
+        fontSize: '24px',
+        fill: '#ffff00'
+    });
+
+    platforms = this.physics.add.staticGroup();
+
+    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platforms.create(600, 400, 'ground');
+    platforms.create(50, 250, 'ground');
+    platforms.create(750, 220, 'ground');
+    platforms.create(400, 200, 'ground');
+
+    player = this.physics.add.sprite(100, 450, 'dude');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [{ key: 'dude', frame: 4 }],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    cursors = this.input.keyboard.createCursorKeys();
+    spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+    stars.children.iterate(function (child) {
+        child.setScale(0.4);
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        child.body.gravity.y = Phaser.Math.Between(80, 250);
+    });
+
+    bombs = this.physics.add.group();
+
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.collider(bombs, platforms);
+
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
+
+function update () {
+
+    if (gameOver) return;
+
+    let elapsed = Math.floor((this.time.now - startTime) / 1000);
+    timerText.setText('Time: ' + elapsed);
+
+    if (cursors.left.isDown) {
+        player.setVelocityX(-160);
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown) {
+        player.setVelocityX(160);
+        player.anims.play('right', true);
+    }
+    else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
+
+    if ((cursors.up.isDown || spaceBar.isDown) && player.body.blocked.down) {
+        player.setVelocityY(-330);
+    }
+}
+
+function collectStar (player, star) {
+
+    star.disableBody(true, true);
+
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (bombs.countActive(true) < 5) {
+
+        var x = (player.x < 400)
+            ? Phaser.Math.Between(450, 800)
+            : Phaser.Math.Between(0, 350);
+
+        var bomb = bombs.create(x, 16, 'bomb');
+
+        bomb.setScale(0.5);
+        bomb.setBounce(0.8);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-150, 150), 20);
+        bomb.setGravityY(200);
+    }
+
+    if (stars.countActive(true) === 0 && !winShown) {
+        winShown = true;
+        endGame(this, "YOU WIN!", "#00ff00");
+    }
+}
+
+function hitBomb (player, bomb) {
+
+    if (gameOver) return;
+
+    lives--;
+    updateLives();
+
+    bomb.disableBody(true, true);
+
+    player.setTint(0xff0000);
+
+    this.time.delayedCall(200, () => {
+        player.clearTint();
+    });
+
+    if (lives <= 0) {
+        endGame(this, "YOU LOSE", "#ff0000");
+    }
+}
+
+function updateLives () {
+
+    let hearts = '';
+    for (let i = 0; i < lives; i++) {
+        hearts += '❤️';
+    }
+
+    livesText.setText('Lives: ' + hearts);
+}
+
+function endGame(scene, text, color) {
+
+    gameOver = true;
+    scene.physics.pause();
+
+    // UPDATE BEST TIME
+    let finalTime = Math.floor((scene.time.now - startTime) / 1000);
+
+    if (finalTime > bestTime) {
+        bestTime = finalTime;
+        localStorage.setItem('bestTime', bestTime);
+    }
+
+    bestTimeText.setText('Best Time: ' + bestTime);
+
+    scene.add.text(280, 250, text, {
+        fontSize: '48px',
+        fill: color
+    });
+
+    let button = scene.add.text(320, 330, 'RESTART', {
+        fontSize: '32px',
+        fill: '#ffffff',
+        backgroundColor: '#000'
+    })
+    .setPadding(10)
+    .setInteractive();
+
+    button.on('pointerdown', () => {
+        scene.scene.restart();
+    });
+}
+
+</script>
 
 </body>
 </html>

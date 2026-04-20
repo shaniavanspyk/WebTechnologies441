@@ -40,9 +40,6 @@ var scoreText;
 var startTime;
 var timerText;
 
-var bestTime = 0;
-var bestTimeText;
-
 var lives = 3;
 var livesText;
 
@@ -70,9 +67,6 @@ function create () {
     gameOver = false;
     winShown = false;
 
-    // LOAD BEST TIME
-    bestTime = localStorage.getItem('bestTime') || 0;
-
     scoreText = this.add.text(16, 16, 'Score: 0', {
         fontSize: '24px',
         fill: '#fff'
@@ -88,12 +82,6 @@ function create () {
     timerText = this.add.text(16, 85, 'Time: 0', {
         fontSize: '24px',
         fill: '#fff'
-    });
-
-    // ⭐ TOP RIGHT BEST TIME
-    bestTimeText = this.add.text(520, 16, 'Best Time: ' + bestTime, {
-        fontSize: '24px',
-        fill: '#ffff00'
     });
 
     platforms = this.physics.add.staticGroup();
@@ -131,6 +119,7 @@ function create () {
     cursors = this.input.keyboard.createCursorKeys();
     spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+    // ⭐ SMALLER STARS HERE
     stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
@@ -138,7 +127,7 @@ function create () {
     });
 
     stars.children.iterate(function (child) {
-        child.setScale(0.4);
+        child.setScale(0.4); // ⭐ smaller stars
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         child.body.gravity.y = Phaser.Math.Between(80, 250);
     });
@@ -185,6 +174,7 @@ function collectStar (player, star) {
     score += 10;
     scoreText.setText('Score: ' + score);
 
+    // max 5 bombs
     if (bombs.countActive(true) < 5) {
 
         var x = (player.x < 400)
@@ -200,6 +190,7 @@ function collectStar (player, star) {
         bomb.setGravityY(200);
     }
 
+    // WIN
     if (stars.countActive(true) === 0 && !winShown) {
         winShown = true;
         endGame(this, "YOU WIN!", "#00ff00");
@@ -240,16 +231,6 @@ function endGame(scene, text, color) {
 
     gameOver = true;
     scene.physics.pause();
-
-    // UPDATE BEST TIME
-    let finalTime = Math.floor((scene.time.now - startTime) / 1000);
-
-    if (finalTime > bestTime) {
-        bestTime = finalTime;
-        localStorage.setItem('bestTime', bestTime);
-    }
-
-    bestTimeText.setText('Best Time: ' + bestTime);
 
     scene.add.text(280, 250, text, {
         fontSize: '48px',

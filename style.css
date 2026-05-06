@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: #0f172a;
+}
+
+#canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.scroll-container {
+  height: 400vh;
+}
+
+section {
+  height: 100vh;
+}

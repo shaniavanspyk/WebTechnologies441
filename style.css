@@ -17,3 +17,23 @@ body {
 section {
   height: 100vh;
 }
+
+.intro-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: white;
+  font-family: monospace;
+  letter-spacing: 10px;
+  z-index: 5;
+  pointer-events: none;
+  animation: fadeOut 4s ease forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
